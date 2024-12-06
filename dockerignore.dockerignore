@@ -1,0 +1,17 @@
+# Ignore logs
+logs/
+
+# Ignore directories you don't want in the image
+not_necessary/
+
+# Ignore editor configuration files
+.vscode/
+
+# Ignore specific files
+*.txt.txt
+
+# Ignore Python cache
+__pycache__/
+
+# Ignore virtual environment
+env/
