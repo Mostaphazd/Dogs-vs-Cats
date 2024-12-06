@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dog or Cat Classifier</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Dog or Cat Classifier</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="{{ url_for('index') }}">Description</a></li>
+      <li class="active"><a href="{{ url_for('predict_page') }}">Predict</a></li>
+      <li><a href="{{ url_for('about') }}">About Us</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Content -->
+<div class="container" style="margin-top: 30px;">
+  <h2>About This Project</h2>
+  <p>This project uses a Convolutional Neural Network (CNN) to classify images as either a cat or a dog. Our machine learning model has been trained to recognize common features of cats and dogs, allowing it to make accurate predictions based on the input image.</p>
+  
+  <div style="text-align: center; margin-top: 20px">
+    <img style="max-width: 600px" src="{{ url_for('static', filename='img/cat_dog.jpg') }}" alt="Cat and Dog">
+  </div>
+</div>
+
+</body>
+</html>
+
+

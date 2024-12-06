@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Dog or Cat</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body onload="playSound()">
+
+  <!-- Page Title -->
+  <h3 style="text-align: center; margin-top: 20px;">Is it a Cat or Dog?</h3>
+
+  <!-- Display the cat_dog.jpg image -->
+  <div style="text-align: center; margin-top: 20px;">
+    <img src="{{ url_for('static', filename='img/cat_dog.jpg') }}" alt="Cat and Dog" style="max-width: 500px;">
+  </div>
+
+  <!-- Container for Image Upload, Loading Indicator, and Prediction Result -->
+  <div style="width: 90%; margin: auto; text-align: center; margin-top: 30px;">
+
+    <!-- Image Upload Form -->
+    <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" onsubmit="showloading()">
+      <span class="btn btn-default btn-file">
+        Upload Image <input type="file" name="image" required>
+      </span>
+      <input type="submit" value="Predict" class="btn btn-primary">
+    </form>
+
+    <!-- Loading Indicator -->
+    <div style="margin-top: 20px;">
+      <img id="loading_image" style="display: none;" src="{{ url_for('static', filename='img/loading_.gif') }}"
+        alt="Loading...">
+    </div>
+
+
+    {% if image_file_name %}
+    <div style="margin-top: 30px;">
+      {% if label == "Human" %}
+      <img src="{{ url_for('static', filename='img/warning.png') }}" alt="Warning Image"
+        style="max-width: 500px; margin-top: 20px;">
+      <div style="color: red; font-weight: bold; margin-top: 10px;">
+        PLEASE BE ETHICAL, DON'T USE HUMAN PICTURES!!!
+      </div>
+      {% elif label == "Both Dog and Cat" %}
+      <div style="color: orange; font-weight: bold; margin-top: 10px;">
+        The image contains both a Dog and a Cat. ~NICE ONEE~ 
+      </div>
+      <img src="{{ url_for('send_file', filename=image_file_name) }}" alt="{{ image_file_name }}"
+        style="max-width: 500px; max-height: 450px; margin-top: 30px; border-radius: 8px;">
+      <p style="font-style: italic; margin-top: 10px;">{{ image_file_name }}</p>
+      {% elif label == "Dog" %}
+      <img src="{{ url_for('send_file', filename=image_file_name) }}" alt="{{ image_file_name }}"
+        style="max-width: 500px; max-height: 450px; margin-top: 30px; border-radius: 8px;">
+      <p style="font-style: italic; margin-top: 10px;">{{ image_file_name }}</p>
+      <p id="result-text" style="font-size: 1.2em; font-weight: bold; margin-top: 20px;">
+        I'm <span style="color: #2c3e50;">{{ accuracy }}%</span> sure this is a:
+      </p>
+      <button id="result-label" class="btn btn-success" style="font-size: 1.5em; padding: 10px 20px;">
+        {{ label }}
+      </button>
+      {% elif label == "Cat" %}
+      <img src="{{ url_for('send_file', filename=image_file_name) }}" alt="{{ image_file_name }}"
+        style="max-width: 500px; max-height: 450px; margin-top: 30px; border-radius: 8px;">
+      <p style="font-style: italic; margin-top: 10px;">{{ image_file_name }}</p>
+      <p id="result-text" style="font-size: 1.2em; font-weight: bold; margin-top: 20px;">
+        I'm <span style="color: #2c3e50;">{{ accuracy }}%</span> sure this is a:
+      </p>
+      <button id="result-label" class="btn btn-success" style="font-size: 1.5em; padding: 10px 20px;">
+        {{ label }}
+      </button>
+      {% elif label == "Uncertain" %}
+      <div style="color: gray; font-weight: bold; margin-top: 10px;">
+       HMMM I AM NOT SURE!! 
+      </div>
+      {% endif %}
+      <!-- Hidden Audio Elements for Sounds -->
+      <audio id="dog-sound" src="{{ url_for('static', filename='sounds/bark.mp3') }}"></audio>
+      <audio id="cat-sound" src="{{ url_for('static', filename='sounds/meow.mp3') }}"></audio>
+      
+    </div>
+    {% endif %}
+
+    <!-- Back to Home Link -->
+    <a href="{{ url_for('index') }}"
+      style="display: inline-block; margin-top: 20px; font-size: 1em; text-decoration: none;">
+      &larr; Back to Home
+    </a>
+  </div>
+
+  <script>
+    function showloading() {
+      document.getElementById('loading_image').style.display = 'inline';
+    }
+
+    function playSound() {
+      // Check the label and play corresponding sound with a loop
+      const label = "{{ label }}";
+      let soundElement;
+      let playCount = 0;
+      const maxPlays = 2; // Set to play the sound 3 times
+
+      if (label === "Dog") {
+        soundElement = document.getElementById('dog-sound');
+        document.getElementById('result-text').innerText = "I AM A DOG!";
+      } else if (label === "Cat") {
+        soundElement = document.getElementById('cat-sound');
+        document.getElementById('result-text').innerText = "I AM A CAT!";
+      }
+
+      if (soundElement) {
+        soundElement.play();
+        soundElement.addEventListener('ended', function () {
+          playCount++;
+          if (playCount < maxPlays) {
+            soundElement.currentTime = 0; // Restart the sound
+            soundElement.play();
+          }
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>
